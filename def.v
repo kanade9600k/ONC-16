@@ -1,12 +1,13 @@
 // 定数管理ファイル
-`define DATA_W 16
-`define ALU_FUNC_W 4
-`define FR_FLAG_W 4
-`define N_FLAG 3
-`define Z_FLAG 2
-`define C_FLAG 1
-`define V_FLAG 0
-`define FR_FUNC_W 3
+`define DATA_W 16       // データ幅
+`define ALU_FUNC_W 4    // ALUの機能選択信号幅
+`define FR_FLAG_W 4     // フラグレジスタのフラグ幅
+`define N_FLAG 3        // Nフラグのインデックス
+`define Z_FLAG 2        // Zフラグのインデックス
+`define C_FLAG 1        // Cフラグのインデックス
+`define V_FLAG 0        // Vフラグのインデックス
+`define FR_FUNC_W 3     // フラグレジスタの機能選択信号幅
+`define IMM_W 8         // イミディエイトデータのデータ幅
 `define ALU_ADD `ALU_FUNC_W'b0001
 `define ALU_SUB `ALU_FUNC_W'b0010
 `define ALU_TH `ALU_FUNC_W'b0011
