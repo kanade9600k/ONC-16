@@ -2,6 +2,11 @@
 `define DATA_W 16
 `define ALU_FUNC_W 4
 `define FR_FLAG_W 4
+`define N_FLAG 3
+`define Z_FLAG 2
+`define C_FLAG 1
+`define V_FLAG 0
+`define FR_FUNC_W 3
 `define ALU_ADD `ALU_FUNC_W'b0001
 `define ALU_SUB `ALU_FUNC_W'b0010
 `define ALU_TH `ALU_FUNC_W'b0011
@@ -12,3 +17,11 @@
 `define ALU_SRA `ALU_FUNC_W'b1011
 `define ALU_SRL `ALU_FUNC_W'b1100
 `define ALU_SLL `ALU_FUNC_W'b1101
+`define FR_BAL `FR_FUNC_W'b000
+`define FR_BEQ `FR_FUNC_W'b001 
+`define FR_BNE `FR_FUNC_W'b010
+`define FR_BLT `FR_FUNC_W'b011
+`define FR_BGE `FR_FUNC_W'b100
+`define FR_BLTU_BC `FR_FUNC_W'b101
+`define FR_BGEU_BNC `FR_FUNC_W'b110
+`define FR_BVF `FR_FUNC_W'b111
