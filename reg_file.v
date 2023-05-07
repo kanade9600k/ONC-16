@@ -20,7 +20,6 @@ module reg_file (
     reg [`DATA_W-1:0] regs[0:`RF_REG-1];  // DATA_Wビット幅のレジスタをRF_REG個宣言
 
     // 機能記述
-    integer i;  // レジスタの初期化に用いるループ変数
     // 順序回路（書き込み）
     always @(posedge clock or negedge n_rst) begin
         // ゼロレジスタのみ初期化
