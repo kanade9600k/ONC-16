@@ -14,16 +14,13 @@ module pc (
     output reg [`DATA_W-1:0] out
 );
 
-    // 内部信号
-    wire [`DATA_W-1:0] w_inc_pc, w_inc_pc_imm, w_imr, w_br;
-
     // 機能記述
     // 順序回路
     always @(posedge clock or negedge n_rst) begin
         if (!n_rst) begin
             out <= `DATA_W'b0;
         end else if (bre) begin  // 分岐有効の場合
-            out <= (imr_sel) ? rs : out + imm + `DATA_W'b1;  // 0: 相対アドレッシング，1: 絶対アドレッシング
+            out <= (imr_sel == `PC_REG) ? rs : out + imm + `DATA_W'b1;
         end else begin
             out <= out + `DATA_W'b1;  // 分岐無効の場合PC + 1 
         end
