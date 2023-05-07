@@ -21,6 +21,8 @@
 `define RF_ZERO 0       // レジスタファイルのゼロレジスタのインデックス
 `define RF_W_SEL_W 1    // レジスタファイル書き込み元選択信号幅
 `define PC_IMR_SEL_W 1  // PCのイミディエイト，レジスタ選択信号幅
+// 未定義データ
+`define DATA_UD `DATA_W'bx      // 未定義データ
 // オペコード
 `define OP_R `OPCODE_W'b0000        // R型命令のオペコード
 `define OP_ADDIU `OPCODE_W'b0001
@@ -65,6 +67,7 @@
 // ALUのAポート入力選択コード
 `define ALU_A_RD `ALU_A_SEL_W'b0    // デスティネーションレジスタの値
 `define ALU_A_SV `ALU_A_SEL_W'b1    // LDHIのシフト値
+`define LDHI_SA `DATA_W'd8          // LDHIのシフト量(shift amount)
 `define ALU_A_UD `ALU_A_SEL_W'bx    // 未定義
 // ALUのBポート入力選択コード
 `define ALU_B_RS `ALU_B_SEL_W'b00   // ソースレジスタの値
