@@ -8,6 +8,9 @@
 `define V_FLAG 0        // Vフラグのインデックス
 `define FR_FUNC_W 3     // フラグレジスタの機能選択信号幅
 `define IMM_W 8         // イミディエイトデータのデータ幅
+`define RF_ADDR_W 4     // レジスタファイルのアドレス幅
+`define RF_REG 16       // レジスタファイルのレジスタ数
+`define RF_ZERO 0       // レジスタファイルのゼロレジスタのインデックス
 `define ALU_ADD `ALU_FUNC_W'b0001
 `define ALU_SUB `ALU_FUNC_W'b0010
 `define ALU_TH `ALU_FUNC_W'b0011
