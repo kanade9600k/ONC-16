@@ -42,7 +42,7 @@ module alu (
     assign y = tmp_y;
     assign flags[`N_FLAG] = y[`DATA_W-1];  // ネガティブフラグ
     assign flags[`Z_FLAG] = ~(|y);  // ゼロフラグ
-    assign flags[`C_FLAG] = tmp_flags[1];  // キャリーフラグ
+    assign flags[`C_FLAG] = tmp_flags[`C_FLAG];  // キャリーフラグ
     assign flags[`V_FLAG] = (  // オーバーフローフラグ，同符号同士の加算結果が異符号，正-負の結果が負，負-正の結果が正の場合1
         ((func == `ALU_ADD) && ((!a[`DATA_W-1] && !b[`DATA_W-1] && y[`DATA_W-1]) || (a[`DATA_W-1] && b[`DATA_W-1] && !y[`DATA_W-1])))
      || ((func == `ALU_SUB) && ((!a[`DATA_W-1] && b[`DATA_W-1] && y[`DATA_W-1]) || (a[`DATA_W-1] && !b[`DATA_W-1] && !y[`DATA_W-1]))));
