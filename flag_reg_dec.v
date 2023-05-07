@@ -38,7 +38,7 @@ module flag_reg_dec (
             `FR_BLTU_BC: tmp_dec <= flag_reg[`C_FLAG];  // C = 1で分岐
             `FR_BGEU_BNC: tmp_dec <= !flag_reg[`C_FLAG];  // C = 0で分岐
             `FR_BVF: tmp_dec <= flag_reg[`V_FLAG];  // V = 1で分岐
-            default: tmp_dec <= 1'bx;
+            default: tmp_dec <= 1'b0;
         endcase
     end
     assign bre = tmp_dec & de;
