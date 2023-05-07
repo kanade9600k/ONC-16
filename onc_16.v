@@ -21,7 +21,6 @@ module onc_16 (
     output wire dmem_we
 );
     // 内部信号定義
-    wire w_clock, w_n_rst;  // クロック，リセット
     wire w_rf_we, w_fr_de, w_dmem_we, w_pc_bre;  // 各種イネーブル
     wire [`IMM_W-1:0] w_imm;  // イミディエイトデータ（オリジナル）
     wire [`DATA_W-1:0] w_imm_z, w_imm_s;  // イミディエイトデータ（ゼロ拡張，符号拡張）
