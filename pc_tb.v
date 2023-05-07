@@ -12,13 +12,13 @@ module pc_tb;
     reg [`DATA_W-1:0] imm_tb;
     reg [`DATA_W-1:0] rs_tb;
     reg [`PC_IMR_SEL_W-1:0] imr_sel_tb;
-    reg [`PC_BR_SEL_W-1:0] br_sel_tb;
+    reg bre_tb;
     reg clock_tb;
     reg n_rst_tb;
     wire [`DATA_W-1:0] out_tb;
 
     // verilog_format: off モジュールの宣言
-    pc pc_inst(.imm(imm_tb), .rs(rs_tb), .imr_sel(imr_sel_tb), .br_sel(br_sel_tb), .clock(clock_tb), .n_rst(n_rst_tb), .out(out_tb));
+    pc pc_inst(.imm(imm_tb), .rs(rs_tb), .imr_sel(imr_sel_tb), .bre(bre_tb), .clock(clock_tb), .n_rst(n_rst_tb), .out(out_tb));
     // verilog_format: on
 
     // クロック記述
@@ -31,43 +31,43 @@ module pc_tb;
         imm_tb <= `DATA_W'b0;
         rs_tb <= `DATA_W'b0;
         #2;
-        n_rst_tb   <= 1'b1;
+        n_rst_tb <= 1'b1;
         // カウントアップの確認
         imr_sel_tb <= `PC_IMR_SEL_W'b0;
-        br_sel_tb  <= `PC_BR_SEL_W'b0;
+        bre_tb <= `PC_BR_SEL_W'b0;
         #1000;
         imr_sel_tb <= `PC_IMR_SEL_W'b1;
-        br_sel_tb  <= `PC_BR_SEL_W'b0;
+        bre_tb <= `PC_BR_SEL_W'b0;
         #1000;
         // PC相対アドレッシング（イミディエイト）の確認
         imm_tb <= `DATA_W'h0080;
         imr_sel_tb <= `PC_IMR_SEL_W'b0;
-        br_sel_tb <= `PC_BR_SEL_W'b1;
+        bre_tb <= `PC_BR_SEL_W'b1;
         #10;
         imr_sel_tb <= `PC_IMR_SEL_W'b0;
-        br_sel_tb  <= `PC_BR_SEL_W'b0;
+        bre_tb <= `PC_BR_SEL_W'b0;
         #100;
         imm_tb <= `DATA_W'hFFF0;  // -16
         imr_sel_tb <= `PC_IMR_SEL_W'b0;
-        br_sel_tb <= `PC_BR_SEL_W'b1;
+        bre_tb <= `PC_BR_SEL_W'b1;
         #10;
         imr_sel_tb <= `PC_IMR_SEL_W'b0;
-        br_sel_tb  <= `PC_BR_SEL_W'b0;
+        bre_tb <= `PC_BR_SEL_W'b0;
         #100;
         // レジスタ絶対アドレッシングの確認
         rs_tb <= `DATA_W'h8000;
         imr_sel_tb <= `PC_IMR_SEL_W'b1;
-        br_sel_tb <= `PC_BR_SEL_W'b1;
+        bre_tb <= `PC_BR_SEL_W'b1;
         #10;
         imr_sel_tb <= `PC_IMR_SEL_W'b1;
-        br_sel_tb  <= `PC_BR_SEL_W'b0;
+        bre_tb <= `PC_BR_SEL_W'b0;
         #100;
         rs_tb <= `DATA_W'hFFFF;
         imr_sel_tb <= `PC_IMR_SEL_W'b1;
-        br_sel_tb <= `PC_BR_SEL_W'b1;
+        bre_tb <= `PC_BR_SEL_W'b1;
         #10;
         imr_sel_tb <= `PC_IMR_SEL_W'b1;
-        br_sel_tb  <= `PC_BR_SEL_W'b0;
+        bre_tb <= `PC_BR_SEL_W'b0;
         #100;
         n_rst_tb <= 1'b0;
         #10;
