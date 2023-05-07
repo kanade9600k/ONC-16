@@ -7,8 +7,8 @@
 module pc (
     input wire [`DATA_W-1:0] imm,
     input wire [`DATA_W-1:0] rs,
-    input wire imr_sel,
-    input wire br_sel,
+    input wire [`PC_IMR_SEL_W-1:0] imr_sel,
+    input wire [`PC_BR_SEL_W-1:0] br_sel,
     input wire clock,
     input wire n_rst,
     output reg [`DATA_W-1:0] out

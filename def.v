@@ -1,13 +1,18 @@
 // 定数管理ファイル
 `define DATA_W 16       // データ幅
+`define IMM_W 8         // イミディエイトデータのデータ幅
+`define INST_W 16       // 命令長
+`define PC_IMR_SEL_W 1  // PCのイミディエイト，レジスタ選択信号幅
+`define PC_BR_SEL_W 1   // PCの分岐選択信号幅
 `define ALU_FUNC_W 4    // ALUの機能選択信号幅
+`define ALU_A_SEL_W 1   // ALUのAポート選択信号幅
+`define ALU_B_SEL_W 2   // ALUのBポート選択信号幅
+`define FR_FUNC_W 3     // フラグレジスタの機能選択信号幅
 `define FR_FLAG_W 4     // フラグレジスタのフラグ幅
 `define N_FLAG 3        // Nフラグのインデックス
 `define Z_FLAG 2        // Zフラグのインデックス
 `define C_FLAG 1        // Cフラグのインデックス
 `define V_FLAG 0        // Vフラグのインデックス
-`define FR_FUNC_W 3     // フラグレジスタの機能選択信号幅
-`define IMM_W 8         // イミディエイトデータのデータ幅
 `define RF_ADDR_W 4     // レジスタファイルのアドレス幅
 `define RF_REG 16       // レジスタファイルのレジスタ数
 `define RF_ZERO 0       // レジスタファイルのゼロレジスタのインデックス
