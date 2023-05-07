@@ -7,10 +7,10 @@
 module flag_reg_dec (
     input wire [`FR_FLAG_W-1:0] flags,
     input wire [`FR_FUNC_W-1:0] func,
-    input wire bre,
+    input wire de,
     input wire clock,
     input wire n_rst,
-    output wire is_br
+    output wire bre
 );
 
     // 内部信号
@@ -41,7 +41,7 @@ module flag_reg_dec (
             default: tmp_dec <= 1'bx;
         endcase
     end
-    assign is_br = tmp_dec & bre;
+    assign bre = tmp_dec & de;
 
 endmodule
 `endif

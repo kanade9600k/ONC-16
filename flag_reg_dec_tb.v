@@ -11,19 +11,19 @@ module flag_reg_dec_tb;
     // 入出力の宣言
     reg [`FR_FLAG_W-1:0] flags_tb;
     reg [`FR_FUNC_W-1:0] func_tb;
-    reg bre_tb;
+    reg de_tb;
     reg clock_tb;
     reg n_rst_tb;
-    wire is_br_tb;
+    wire bre_tb;
 
     // モジュールの宣言
     flag_reg_dec flag_reg_dec_inst (
         .flags(flags_tb),
-        .func (func_tb),
-        .bre  (bre_tb),
+        .func(func_tb),
+        .de(de_tb),
         .clock(clock_tb),
         .n_rst(n_rst_tb),
-        .is_br(is_br_tb)
+        .bre(bre_tb)
     );
 
     // クロック記述
@@ -37,16 +37,16 @@ module flag_reg_dec_tb;
         #2;
         for (i = 0; i < 2 ** `FR_FUNC_W; i = i + 1) begin
             for (j = 0; j < 2 ** `FR_FLAG_W; j = j + 1) begin
-                bre_tb   <= 1'b1;
-                func_tb  <= i;
+                de_tb <= 1'b1;
+                func_tb <= i;
                 flags_tb <= j;
                 #10;
             end
         end
         for (i = 0; i < 2 ** `FR_FUNC_W; i = i + 1) begin
             for (j = 0; j < 2 ** `FR_FLAG_W; j = j + 1) begin
-                bre_tb   <= 1'b0;
-                func_tb  <= i;
+                de_tb <= 1'b0;
+                func_tb <= i;
                 flags_tb <= j;
                 #10;
             end
@@ -54,8 +54,8 @@ module flag_reg_dec_tb;
         n_rst_tb <= 1'b0;
         for (i = 0; i < 2 ** `FR_FUNC_W; i = i + 1) begin
             for (j = 0; j < 2 ** `FR_FLAG_W; j = j + 1) begin
-                bre_tb   <= 1'b1;
-                func_tb  <= i;
+                de_tb <= 1'b1;
+                func_tb <= i;
                 flags_tb <= j;
                 #10;
             end
@@ -63,8 +63,8 @@ module flag_reg_dec_tb;
         n_rst_tb <= 1'b1;
         for (i = 0; i < 2 ** `FR_FUNC_W; i = i + 1) begin
             for (j = 0; j < 2 ** `FR_FLAG_W; j = j + 1) begin
-                bre_tb   <= 1'b1;
-                func_tb  <= i;
+                de_tb <= 1'b1;
+                func_tb <= i;
                 flags_tb <= j;
                 #10;
             end
