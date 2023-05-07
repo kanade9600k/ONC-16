@@ -1,12 +1,12 @@
 // レジスタファイル 分散RAM（同期書き込み，非同期読み出し）
-`ifndef REG_FILE_TEST_V
-`define REG_FILE_TEST_V
+`ifndef REG_FILE_TB_V
+`define REG_FILE_TB_V
 `default_nettype none
 `include "def.v"
 `include "reg_file.v"
 `timescale 1ns / 1ns
 
-module reg_file_test;
+module reg_file_tb;
 
     // 入出力の宣言
     reg [`RF_ADDR_W-1:0] r1_addr_tb;

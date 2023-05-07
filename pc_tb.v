@@ -1,12 +1,12 @@
 // プログラムカウンタモジュールのテストベンチ
-`ifndef PC_TEST_V
-`define PC_TEST_V
+`ifndef PC_TB_V
+`define PC_TB_V
 `default_nettype none
 `include "def.v"
 `include "pc.v"
 `timescale 1ns / 1ns
 
-module pc_test;
+module pc_tb;
 
     // 入出力の宣言
     reg [`DATA_W-1:0] imm_tb;

@@ -1,12 +1,12 @@
 // ビット拡張器のテストベンチ
-`ifndef EXTENDER_TEST_V
-`define EXTENDER_TEST_V
+`ifndef EXTENDER_TB_V
+`define EXTENDER_TB_V
 `default_nettype none
 `include "def.v"
 `include "extender.v"
 `timescale 1ns / 1ns
 
-module extender_test;
+module extender_tb;
 
     // 入出力の宣言
     reg [`IMM_W-1:0] in_tb;

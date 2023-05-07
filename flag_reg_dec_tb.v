@@ -1,12 +1,12 @@
 // フラグレジスタ・デコーダのテストベンチ
-`ifndef FLAG_REG_DEC_TEST_V
-`define FLAG_REG_DEC_TEST_V
+`ifndef FLAG_REG_DEC_TB_V
+`define FLAG_REG_DEC_TB_V
 `default_nettype none
 `include "def.v"
 `include "flag_reg_dec.v"
 `timescale 1ns / 1ns
 
-module flag_reg_dec_test;
+module flag_reg_dec_tb;
 
     // 入出力の宣言
     reg [`FR_FLAG_W-1:0] flags_tb;

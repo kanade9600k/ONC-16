@@ -1,12 +1,12 @@
 // ALUのテストベンチ
-`ifndef ALU_TEST_V
-`define ALU_TEST_V
+`ifndef ALU_TB_V
+`define ALU_TB_V
 `default_nettype none
 `include "def.v"
 `include "alu.v"
 `timescale 1ns / 1ns
 
-module alu_test;
+module alu_tb;
 
     // 入出力の宣言
     reg [`DATA_W-1:0] a_tb;
