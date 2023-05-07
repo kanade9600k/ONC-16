@@ -13,7 +13,9 @@ module reg_file_test;
     reg [`RF_ADDR_W-1:0] r2_addr_tb;
     reg [`RF_ADDR_W-1:0] w_addr_tb;
     reg [`DATA_W-1:0] w_data_tb;
-    reg we_tb, clock_tb, n_rst_tb;
+    reg we_tb;
+    reg clock_tb;
+    reg n_rst_tb;
     wire [`DATA_W-1:0] r1_data_tb;
     wire [`DATA_W-1:0] r2_data_tb;
 
