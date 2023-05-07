@@ -21,6 +21,7 @@ module decoder_tb;
     wire [`FR_FUNC_W-1:0] fr_func_tb;
     wire fr_de_tb;
     wire [`PC_IMR_SEL_W-1:0] pc_imr_sel_tb;
+    wire dmem_we_tb;
 
     // モジュールの宣言
     decoder decoder_inst (
@@ -36,7 +37,8 @@ module decoder_tb;
         .rf_we(rf_we_tb),
         .fr_func(fr_func_tb),
         .fr_de(fr_de_tb),
-        .pc_imr_sel(pc_imr_sel_tb)
+        .pc_imr_sel(pc_imr_sel_tb),
+        .dmem_we(dmem_we_tb)
     );
 
     // テストパターン

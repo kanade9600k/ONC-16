@@ -17,7 +17,8 @@ module decoder (
     output wire rf_we,
     output wire [`FR_FUNC_W-1:0] fr_func,
     output wire fr_de,
-    output wire [`PC_IMR_SEL_W-1:0] pc_imr_sel
+    output wire [`PC_IMR_SEL_W-1:0] pc_imr_sel,
+    output wire dmem_we
 );
 
     // 内部信号（reg型だが，always @(*) なので組み合わせ回路）
@@ -117,6 +118,9 @@ module decoder (
 
     // プログラムカウンタ分岐時利用値制御信号抽出
     assign pc_imr_sel = in[`INST_W-`OPCODE_W-1];
+
+    // データメモリ書き込み有効
+    assign dmem_we = (in[`INST_W-1:`INST_W-`OPCODE_W-`R_FUNC_W] == {`OP_R, `R_FUNC_ST});
 
 endmodule
 
