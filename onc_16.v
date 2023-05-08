@@ -37,6 +37,9 @@ module onc_16 (
     wire [`PC_IMR_SEL_W-1:0] w_pc_imr_sel;  // プログラムカウンタイミディエイト・レジスタ選択
 
     // 機能記述（接続）
+    // CPUデータメモリ接続
+    assign dmem_dout = w_r1_data;
+    assign dmem_addr = w_r2_data;
     // 命令デコーダ
     decoder decoder_inst (
         .in(imem_din),
