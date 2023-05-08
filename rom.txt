@@ -1,0 +1,25 @@
+5011  // LDI r1, 1     fib = 1
+5002  // LDI r2, 0     pre = 0
+5143  // LDI r3, 20    n = 20
+5014  // LDI r4, 1     i = 1
+0E34  // CMP r4, r3    i - n
+F405  // BGEI 5       if (i - n >= 0) goto 5 + 1 + 5
+0315  // MOV r5, r1    tmp = fib
+0121  // ADD r1, r2    fib = fib + pre
+0352  // MOV r2, r5    pre = tmp
+1014  // ADDIU r4, 1   i++
+F0F9  // BALI -7        goto 10 + 1 + (-7)
+0501  // ST r1, r0     store fib, 0
+F0FF  // BALI -1       goto 12 + 1 + (-1)
+// 機械語は ソースレジスタ デスティネーションレジスタの順
+
+/*
+フィボナッチ数列20項目
+    fib = 1
+    pre = 0
+    n = 20
+    for (i = 1; i < n; i++)
+        tmp = fib
+        fib = fib + pre
+        pre = tmp
+*/
