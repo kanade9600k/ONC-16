@@ -46,7 +46,7 @@ module onc_16_tb;
         #10;
         n_rst_tb <= 1'b1;
         dmem_din_tb <= `DATA_UD;
-        #1000;
+        #100000;
         $finish;
     end
 
