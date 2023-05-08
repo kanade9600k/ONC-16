@@ -114,7 +114,7 @@ module decoder (
     assign fr_func = in[`INST_W-`OPCODE_W-2:`INST_W-`OPCODE_W-`FR_FUNC_W-1];
 
     // フラグレジスタデコード有効信号
-    assign fr_de = (in[`INST_W-1:`OPCODE_W] == `OP_B);
+    assign fr_de = (in[`INST_W-1:`INST_W-`OPCODE_W] == `OP_B);
 
     // プログラムカウンタ分岐時利用値制御信号抽出
     assign pc_imr_sel = in[`INST_W-`OPCODE_W-1];
