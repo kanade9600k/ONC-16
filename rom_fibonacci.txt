@@ -1,3 +1,14 @@
+// 機械語は ソースレジスタ デスティネーションレジスタの順
+/*
+フィボナッチ数列24項目
+    fib = 1
+    pre = 0
+    n = 24
+    for (i = 1; i < n; i++)
+        tmp = fib
+        fib = fib + pre
+        pre = tmp
+*/
 5011  // LDI r1, 1     fib = 1
 5002  // LDI r2, 0     pre = 0
 5183  // LDI r3, 24    n = 24
@@ -11,15 +22,3 @@ F405  // BGEI 5       if (i - n >= 0) goto 5 + 1 + 5
 F0F9  // BALI -7        goto 10 + 1 + (-7)
 0501  // ST r1, r0     store fib, 0
 F0FF  // BALI -1       goto 12 + 1 + (-1)
-// 機械語は ソースレジスタ デスティネーションレジスタの順
-
-/*
-フィボナッチ数列24項目
-    fib = 1
-    pre = 0
-    n = 24
-    for (i = 1; i < n; i++)
-        tmp = fib
-        fib = fib + pre
-        pre = tmp
-*/
