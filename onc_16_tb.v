@@ -31,7 +31,7 @@ module onc_16_tb;
     // 実行する命令メモリの内容をファイルから読み込み
     reg [`INST_W-1:0] imem[0:2**`DATA_W-1];
     initial begin
-        $readmemh("rom.txt", imem);
+        $readmemh("rom_multiplication.txt", imem);
     end
     // 命令メモリにCPUの命令メモリ入力と命令メモリアドレスを接続
     assign imem_din_tb = imem[imem_addr_tb];
