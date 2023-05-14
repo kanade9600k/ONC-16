@@ -79,10 +79,11 @@ module onc_16 (
 
     // ALU
     assign w_alu_a = (w_alu_a_sel == `ALU_A_RD) ? w_r1_data :  // aポート入力選択
-                     (w_alu_a_sel == `ALU_A_SV) ? `LDHI_SA  : `DATA_UD;
+                     (w_alu_a_sel == `ALU_A_ZE) ? w_imm_z   : `DATA_UD;
     assign w_alu_b = (w_alu_b_sel == `ALU_B_RS) ? w_r2_data :  // bポート入力選択
                      (w_alu_b_sel == `ALU_B_ZE) ? w_imm_z   :
-                     (w_alu_b_sel == `ALU_B_SE) ? w_imm_s   : `DATA_UD;
+                     (w_alu_b_sel == `ALU_B_SE) ? w_imm_s   : 
+                     (w_alu_b_sel == `ALU_B_SV) ? `LDHI_SA  : `DATA_UD;
     alu alu_inst(.a(w_alu_a), .b(w_alu_b), .func(w_alu_func), .y(w_alu_y), .flags(w_fr_flags));
 
     // フラグレジスタ・デコーダ

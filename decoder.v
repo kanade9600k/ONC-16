@@ -76,7 +76,7 @@ module decoder (
     assign rf_we = tmp_rf_we;
 
     // ALU Aポート入力選択デコード
-    assign alu_a_sel = (in[`INST_W-1:`INST_W-`OPCODE_W] == `OP_LDHI) ? `ALU_A_SV : `ALU_A_RD;
+    assign alu_a_sel = (in[`INST_W-1:`INST_W-`OPCODE_W] == `OP_LDHI) ? `ALU_A_ZE : `ALU_A_RD;
 
     // ALU Bポート入力選択デコード
     always @(*) begin
@@ -86,7 +86,7 @@ module decoder (
             `OP_SUBIU: tmp_alu_b_sel <= `ALU_B_ZE;
             `OP_LDIU:  tmp_alu_b_sel <= `ALU_B_ZE;
             `OP_LDI:   tmp_alu_b_sel <= `ALU_B_SE;
-            `OP_LDHI:  tmp_alu_b_sel <= `ALU_B_ZE;
+            `OP_LDHI:  tmp_alu_b_sel <= `ALU_B_SV;
             `OP_ANDI:  tmp_alu_b_sel <= `ALU_B_ZE;
             `OP_ORI:   tmp_alu_b_sel <= `ALU_B_ZE;
             `OP_XORI:  tmp_alu_b_sel <= `ALU_B_ZE;

@@ -66,13 +66,14 @@
 `define ALU_UD `ALU_FUNC_W'bx       // 未定義
 // ALUのAポート入力選択コード
 `define ALU_A_RD `ALU_A_SEL_W'b0    // デスティネーションレジスタの値
-`define ALU_A_SV `ALU_A_SEL_W'b1    // LDHIのシフト値
-`define LDHI_SA `DATA_W'd8          // LDHIのシフト量(shift amount)
+`define ALU_A_ZE `ALU_A_SEL_W'b1    // LDHIの被シフト値(immのゼロ拡張値)
 `define ALU_A_UD `ALU_A_SEL_W'bx    // 未定義
 // ALUのBポート入力選択コード
 `define ALU_B_RS `ALU_B_SEL_W'b00   // ソースレジスタの値
 `define ALU_B_ZE `ALU_B_SEL_W'b01   // immのゼロ拡張値
 `define ALU_B_SE `ALU_B_SEL_W'b10   // immの符号拡張値
+`define ALU_B_SV `ALU_B_SEL_W'b11   // LDHIのシフト値
+`define LDHI_SA `DATA_W'd8          // LDHIのシフト量(shift amount)
 `define ALU_B_UD `ALU_B_SEL_W'bx    // 未定義
 // レジスタファイルの書き込み元選択コード
 `define RF_W_ALU `RF_W_SEL_W'b0     // ALU出力から書き込み
