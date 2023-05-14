@@ -14,27 +14,24 @@ module alu (
 
     // 内部信号（reg型だが，always @(*) なので組み合わせ回路が生成される）
     reg [`DATA_W-1:0] tmp_y;
-    reg [`DATA_W-1:0] tmp_flags;
+    reg tmp_c_flag;
 
-    // 機能記述
+    // verilog_format: off 機能記述
     // funcによって機能を分岐（組み合わせ回路）
     always @(*) begin
         case (func)
-            `ALU_ADD: {tmp_flags[`C_FLAG], tmp_y} <= a + b;
-            `ALU_SUB: {tmp_flags[`C_FLAG], tmp_y} <= a - b;
-            `ALU_TH:  tmp_y <= b;
-            `ALU_NOT: tmp_y <= ~b;
-            `ALU_AND: tmp_y <= a & b;
-            `ALU_OR:  tmp_y <= a | b;
-            `ALU_XOR: tmp_y <= a ^ b;
+            `ALU_ADD: begin {tmp_c_flag, tmp_y} <= a + b; end
+            `ALU_SUB: begin {tmp_c_flag, tmp_y} <= a - b; end
+            `ALU_TH:  begin tmp_y <= b;     tmp_c_flag <= 1'b0; end
+            `ALU_NOT: begin tmp_y <= ~b;    tmp_c_flag <= 1'b0; end
+            `ALU_AND: begin tmp_y <= a & b; tmp_c_flag <= 1'b0; end
+            `ALU_OR:  begin tmp_y <= a | b; tmp_c_flag <= 1'b0; end
+            `ALU_XOR: begin tmp_y <= a ^ b; tmp_c_flag <= 1'b0; end
             // シフトは最後のあふれがキャリー，桁あふれを保持するため1bit拡張して演算
-            `ALU_SRA: {tmp_y, tmp_flags[`C_FLAG]} <= ($signed({a, 1'b0}) >>> b);
-            `ALU_SRL: {tmp_y, tmp_flags[`C_FLAG]} <= ({a, 1'b0}) >> b;
-            `ALU_SLL: {tmp_flags[`C_FLAG], tmp_y} <= ({1'b0, a}) << b;
-            default: begin
-                tmp_y <= `DATA_W'bx;
-                tmp_flags <= `FR_FLAG_W'b0;
-            end
+            `ALU_SRA: begin {tmp_y, tmp_c_flag} <= ($signed({a, 1'b0}) >>> b); end
+            `ALU_SRL: begin {tmp_y, tmp_c_flag} <= ({a, 1'b0}) >> b; end
+            `ALU_SLL: begin {tmp_c_flag, tmp_y} <= ({1'b0, a}) << b; end
+            default:  begin tmp_y <= `DATA_W'bx; tmp_c_flag <= 1'bx; end
         endcase
     end
 
@@ -42,7 +39,7 @@ module alu (
     assign y = tmp_y;
     assign flags[`N_FLAG] = y[`DATA_W-1];  // ネガティブフラグ
     assign flags[`Z_FLAG] = ~(|y);  // ゼロフラグ
-    assign flags[`C_FLAG] = tmp_flags[`C_FLAG];  // キャリーフラグ
+    assign flags[`C_FLAG] = tmp_c_flag;  // キャリーフラグ
     assign flags[`V_FLAG] = (  // オーバーフローフラグ，同符号同士の加算結果が異符号，正-負の結果が負，負-正の結果が正の場合1
         ((func == `ALU_ADD) && ((!a[`DATA_W-1] && !b[`DATA_W-1] && y[`DATA_W-1]) || (a[`DATA_W-1] && b[`DATA_W-1] && !y[`DATA_W-1])))
      || ((func == `ALU_SUB) && ((!a[`DATA_W-1] && b[`DATA_W-1] && y[`DATA_W-1]) || (a[`DATA_W-1] && !b[`DATA_W-1] && !y[`DATA_W-1]))));
