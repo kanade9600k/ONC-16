@@ -20,15 +20,12 @@ module reg_file (
     reg [`DATA_W-1:0] regs[0:`RF_REG-1];  // DATA_Wビット幅のレジスタをRF_REG個宣言
 
     // 機能記述
-    // 順序回路（書き込み）
+    // 順序回路（書き込み）ラッチ生成の警告が出るが，分散RAMなので問題ない
     always @(posedge clock or negedge n_rst) begin
-        // ゼロレジスタのみ初期化
         if (!n_rst) begin
-            regs[`RF_ZERO] <= `DATA_W'b0;
-        end
-        // 書き込みが有効かつ書き込み先がゼロレジスタでない場合，書き込み
-        if (we && (w_addr != `RF_ZERO)) begin
-            regs[w_addr] <= w_data;
+            regs[`RF_ZERO] <= `DATA_W'b0;  // ゼロレジスタのみ初期化
+        end else if (we && (w_addr != `RF_ZERO)) begin
+            regs[w_addr] <= w_data;// 書き込みが有効かつ書き込み先がゼロレジスタでない場合，書き込み
         end
     end
 
