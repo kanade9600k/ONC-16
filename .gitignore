@@ -1,2 +1,14 @@
+# iverilogのファイルを除外
 *.out
 *.vcd
+
+# Quartus generated folders
+db/
+incremental_db/
+simulation/
+timing/
+testbench/
+*_sim/
+output_files/
+
+*bak
