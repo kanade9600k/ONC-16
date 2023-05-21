@@ -34,7 +34,7 @@ module onc_16_tb;
         $readmemh("rom_multiplication.txt", imem);
     end
     // 命令メモリにCPUの命令メモリ入力と命令メモリアドレスを接続
-    always @(posedge clock_tb) begin
+    always @(negedge clock_tb) begin    // アドレスとデータが1クロックずれる問題に対処するために，データは立ち下がりエッジで読み込む
         imem_din_tb <= imem[imem_addr_tb];
     end
 
