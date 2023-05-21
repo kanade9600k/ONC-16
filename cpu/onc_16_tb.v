@@ -7,7 +7,7 @@
 
 module onc_16_tb;
 
-    wire [`INST_W-1:0] imem_din_tb;
+    reg [`INST_W-1:0] imem_din_tb;
     reg [`DATA_W-1:0] dmem_din_tb;
     reg clock_tb;
     reg n_rst_tb;
@@ -34,7 +34,9 @@ module onc_16_tb;
         $readmemh("rom_multiplication.txt", imem);
     end
     // 命令メモリにCPUの命令メモリ入力と命令メモリアドレスを接続
-    assign imem_din_tb = imem[imem_addr_tb];
+    always @(posedge clock_tb) begin
+        imem_din_tb <= imem[imem_addr_tb];
+    end
 
     // クロック記述
     always #5 clock_tb <= ~clock_tb;
