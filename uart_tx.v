@@ -8,7 +8,7 @@ module uart_tx (
     input wire n_rst,
     input wire start,
     input wire [7:0] tx_data,
-    output wire ready,
+    output wire ready,  // 送信準備完了: 1, 送信中or送信準備中: 0
     output reg tx
 );
     // 内部定数定義
@@ -30,10 +30,9 @@ module uart_tx (
                 clock_count <= 9'd0;
                 tx <= data_buf[0];  // 最下位ビットを送信
                 tx_index <= tx_index + 4'd1;
-                data_buf[7:0] <= {1'b1, data_buf[7:1]};  // 1ビット右シフト
+                data_buf[7:0] <= {1'b1, data_buf[7:1]};  // 1ビット右シフト(左の1はストップビット)
 
-                if (tx_index == 4'd8) begin
-                    tx <= 1'b1;  // ストップビットを送信
+                if (tx_index == 4'd9) begin
                     is_send <= 1'b0;  // 送信終了
                 end
 
@@ -53,7 +52,7 @@ module uart_tx (
         end
     end
 
-    assign ready = ~is_send;  // 送信中でない場合，受信準備完了信号を出力
+    assign ready = (!start) && (!is_send);  // 送信準備でないかつ送信中でない場合，送信準備完了信号を出力
 
 endmodule
 
