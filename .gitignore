@@ -10,5 +10,10 @@ timing/
 testbench/
 *_sim/
 output_files/
+.qsys_edit/
 
 *bak
+*bsf
+
+# ドキュメント関連のフォルダを除外
+img/
