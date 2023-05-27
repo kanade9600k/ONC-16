@@ -1,0 +1,9 @@
+{signal: [
+  {name: "clock", wave:"p........"},
+  {name: "dmem_we", wave: "010......"},
+  {name: "dmem_addr", wave: "595555555"},
+  {name: "dmem_data", wave: "545555555"},
+  {},
+  {name: "fifo_we", wave: "0.10....."},
+  {name: "fifo_din", wave: "x.4x....."}
+]}
