@@ -1,17 +1,24 @@
 // 周辺回路を含めたトップモジュール
+`ifndef TOP_V
+`define TOP_V
 `include "cpu/onc_16.v"
 `include "uart_tx.v"
 `include "rom.v"
+`include "dpram.v"
 `default_nettype none
 
 module top (
     input  wire clock,
     input  wire n_rst,
-    output wire TxD
+    output wire TxD,
+    output wire TxD_test,
+    output wire RTS,
+    output wire WAKEUP
 );
+
     // 内部パラメータ
-    parameter UART_STATUS = 12'h800;
-    parameter UART_DATA = 12'h801;
+    parameter UART_STATUS_ADDR = 12'h800;
+    parameter UART_DATA_ADDR = 12'h801;
 
     // 内部信号定義
     wire w_inner_clock;
@@ -21,6 +28,8 @@ module top (
     wire [15:0] w_dmem_uart_d;
     wire w_uart_start, w_uart_ready;
     reg uart_dmem_we;
+    reg [11:0] uart_dmem_addr;
+    reg uart_start;
 
 
 
@@ -51,24 +60,25 @@ module top (
         .data (w_imem_d)
     );
 
-    // データメモリ(IP: RAM)
-    ram ram_inst (
-        .address_a(w_dmem_addr),
-        .clock_a(w_inner_clock),
-        .data_a(w_dmem_dout),
-        .wren_a(w_dmem_we),
-        .q_a(w_dmem_din),
-        .address_b(uart_dmem_we ? UART_STATUS : UART_DATA), // uartの送信開始の直後の1クロックはデータのアドレス，その他はステータスのアドレス
-        .clock_b(w_inner_clock),
-        .data_b({15'b0, w_uart_ready}),  // UARTステータス情報
-        .wren_b(uart_dmem_we),
-        .q_b(w_dmem_uart_d)
+    // データメモリ
+    dpram dpram_inst (
+        .clock(w_inner_clock),
+        .addr1(w_dmem_addr[11:0]),
+        .din1 (w_dmem_dout),
+        .we1  (w_dmem_we),
+        .dout1(w_dmem_din),
+        .addr2(uart_dmem_addr),
+        .din2 ({15'b0, w_uart_ready}),
+        .we2  (uart_dmem_we),
+        .dout2(w_dmem_uart_d)
     );
 
-    assign w_uart_start = (w_dmem_addr == UART_DATA) && w_dmem_we; // UARTにマップされたアドレスに書き込まれたとき1
+    assign w_uart_start = (w_dmem_addr == UART_DATA_ADDR) && w_dmem_we; // UARTにマップされたアドレスに書き込まれたとき1
 
     always @(posedge clock) begin
-        uart_dmem_we <= !w_uart_start; // UARTがスタートした直後の1クロックだけ0(dmem書き込み禁止)
+        uart_start <= ((w_dmem_addr == UART_DATA_ADDR) && w_dmem_we) ? 1'b1 : 1'b0;
+        uart_dmem_we <= !uart_start;  // UARTがスタートした直後の1クロックだけ0(dmem書き込み禁止)
+        uart_dmem_addr <= (!uart_start) ? UART_DATA_ADDR : UART_STATUS_ADDR;
     end
 
     // UART送信モジュール
@@ -81,4 +91,11 @@ module top (
         .tx(TxD)
     );
 
+    // UART IC 定数割当て
+    assign TxD_test = TxD;
+    assign RTS = 1'b0;
+    assign WAKEUP = 1'b1;
+
 endmodule
+
+`endif
