@@ -27,9 +27,9 @@ module top_tb;
     initial begin
         clock_tb <= 1'b0;
         n_rst_tb <= 1'b0;
-        #10;
+        #20;
         n_rst_tb <= 1'b1;
-        #1000000;
+        #4000000;
         $finish;
     end
 

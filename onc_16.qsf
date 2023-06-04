@@ -76,10 +76,11 @@ set_global_assignment -name EDA_TEST_BENCH_NAME top_tb -section_id eda_simulatio
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id top_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME top_tb -section_id top_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE top_tb.v -section_id top_tb
-set_location_assignment PIN_A4 -to TxD_test
+set_location_assignment PIN_B4 -to TxD_test
 set_location_assignment PIN_A7 -to RTS
 set_location_assignment PIN_A6 -to WAKEUP
-set_global_assignment -name VERILOG_FILE dram.v
+set_global_assignment -name VERILOG_FILE divider.v
+set_global_assignment -name VERILOG_FILE dpram.v
 set_global_assignment -name VERILOG_FILE rom.v
 set_global_assignment -name VERILOG_FILE uart_tx.v
 set_global_assignment -name VERILOG_FILE cpu/reg_file_tb.v
