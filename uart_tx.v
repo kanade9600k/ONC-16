@@ -13,6 +13,7 @@ module uart_tx (
 );
     // 内部定数定義
     parameter UART_CLOCK = 9'd434;  // 50MHz(クロック)/115.2kHz(ポーレート)
+    // parameter UART_CLOCK = 9'd217;  // 25MHz(クロック)/115.2kHz(ポーレート)
     // 内部信号定義
     reg [7:0] data_buf;  // 送信データの一時保存用
     reg [3:0] tx_index;  // どのビットを送っているか
@@ -52,7 +53,7 @@ module uart_tx (
         end
     end
 
-    assign ready = (!start) && (!is_send);  // 送信準備でないかつ送信中でない場合，送信準備完了信号を出力
+    assign ready = !is_send;  // 送信中でない場合，送信準備完了信号を出力
 
 endmodule
 
