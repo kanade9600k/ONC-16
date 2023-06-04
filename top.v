@@ -33,26 +33,27 @@ module top (
     reg uart_status;
     reg [1:0] uart_mode;
 
+    // FPGA書き込み時コメントアウト解除
+    // // 内部クロック生成(IP: PLL)
+    // pll pll_inst (
+    //     .inclk0(clock),
+    //     .c0(clock_100M),
+    //     .c1(clock_50M),
+    //     .c2(clock_25M)
+    // );
 
-    // 内部クロック生成(IP: PLL)
-    pll pll_inst (
-        .inclk0(clock),
-        .c0(clock_100M),
-        .c1(clock_50M),
-        .c2(clock_25M)
+    // FPGA書き込み時コメントアウト
+    assign clock_100M = clock;
+    divider divider_100_to_50 (
+        .clock_in(clock),
+        .n_rst(n_rst),
+        .clock_out(clock_50M)
     );
-
-    // assign clock_100M = clock;
-    // divider divider_100_to_50 (
-    //     .clock_in(clock),
-    //     .n_rst(n_rst),
-    //     .clock_out(clock_50M)
-    // );
-    // divider divider_50_to_25 (
-    //     .clock_in(clock_50M),
-    //     .n_rst(n_rst),
-    //     .clock_out(clock_25M)
-    // );
+    divider divider_50_to_25 (
+        .clock_in(clock_50M),
+        .n_rst(n_rst),
+        .clock_out(clock_25M)
+    );
 
     // CPU
     onc_16 onc_16_inst (
@@ -81,9 +82,7 @@ module top (
         .we1  (w_dmem_we),
         .dout1(w_dmem_din),
         .addr2(uart_dmem_addr),
-        // .din2 ({15'b0, w_uart_ready}),
         .din2 ({15'b0, uart_status}),
-        // .we2  (!is_uart_w_detect),
         .we2  (dpram_we2),
         .dout2(w_uart_dmem_data)
     );
@@ -115,6 +114,7 @@ module top (
                     uart_mode <= (!w_uart_ready) ? 2'd3: 2'd2; // UARTが送信開始したことを確認したらモード3へ
                 end
                 2'd3: begin
+                    uart_start <= 1'b0;
                     if (w_uart_ready) begin
                         uart_dmem_addr <= UART_STATUS_ADDR;
                         uart_status <= 1'b1;  // ステータスに送信準備完了を設定
