@@ -29,27 +29,30 @@ module top (
     wire [15:0] w_uart_dmem_data;
     reg [11:0] uart_dmem_addr;
     reg uart_start;
+    reg dpram_we2;
+    reg uart_status;
+    reg [1:0] uart_mode;
 
 
-    // // 内部クロック生成(IP: PLL)
-    // pll pll_inst (
-    //     .inclk0(clock),
-    //     .c0(clock_100M),
-    //     .c1(clock_50M),
-    //     .c2(clock_25M)
+    // 内部クロック生成(IP: PLL)
+    pll pll_inst (
+        .inclk0(clock),
+        .c0(clock_100M),
+        .c1(clock_50M),
+        .c2(clock_25M)
+    );
+
+    // assign clock_100M = clock;
+    // divider divider_100_to_50 (
+    //     .clock_in(clock),
+    //     .n_rst(n_rst),
+    //     .clock_out(clock_50M)
     // );
-
-    assign clock_100M = clock;
-    divider divider_100_to_50 (
-        .clock_in(clock),
-        .n_rst(n_rst),
-        .clock_out(clock_50M)
-    );
-    divider divider_50_to_25 (
-        .clock_in(clock_50M),
-        .n_rst(n_rst),
-        .clock_out(clock_25M)
-    );
+    // divider divider_50_to_25 (
+    //     .clock_in(clock_50M),
+    //     .n_rst(n_rst),
+    //     .clock_out(clock_25M)
+    // );
 
     // CPU
     onc_16 onc_16_inst (
@@ -78,26 +81,49 @@ module top (
         .we1  (w_dmem_we),
         .dout1(w_dmem_din),
         .addr2(uart_dmem_addr),
-        .din2 ({15'b0, w_uart_ready}),
-        .we2  (!is_uart_w_detect),
+        // .din2 ({15'b0, w_uart_ready}),
+        .din2 ({15'b0, uart_status}),
+        // .we2  (!is_uart_w_detect),
+        .we2  (dpram_we2),
         .dout2(w_uart_dmem_data)
     );
 
-    reg is_uart_w_detect;
     always @(posedge clock_100M or negedge n_rst) begin
         if (!n_rst) begin
-            is_uart_w_detect <= 1'b0;
             uart_start <= 1'b0;
             uart_dmem_addr <= UART_STATUS_ADDR;  // デフォルトはステータスアドレスにアクセス
-        end else if (!w_uart_ready) begin  // UART送信確認でフラグ降ろす
-            is_uart_w_detect <= 1'b0;
-            uart_start <= 1'b0;
-            uart_dmem_addr <= UART_STATUS_ADDR;  // デフォルトはステータスアドレスにアクセス
-        end else if ((w_dmem_addr[11:0] == UART_DATA_ADDR) && w_dmem_we) begin
-            is_uart_w_detect <= 1'b1;  // 書き込み検知
-            uart_dmem_addr   <= UART_DATA_ADDR;  // データアドレスにアクセス
-        end else if (is_uart_w_detect) begin
-            uart_start <= 1'b1;  // UART送信用データの準備完了(送信開始)
+            uart_status <= 1'b1;
+            uart_mode <= 2'd0;
+            dpram_we2 <= 1'b0;
+        end else begin
+            case (uart_mode)
+                2'd0: begin
+                    if ((w_dmem_addr[11:0] == UART_DATA_ADDR) && w_dmem_we) begin  // 書き込み検知
+                        uart_dmem_addr <= UART_STATUS_ADDR;  // ステータスアドレスにアクセス
+                        uart_status <= 1'b0;  // ステータスを送信中に設定
+                        dpram_we2 <= 1'b1;  // ram(uart側)の書き込み許可
+                        uart_mode <= 2'd1;
+                    end
+                end
+                2'd1: begin
+                    uart_dmem_addr <= UART_DATA_ADDR;
+                    dpram_we2 <= 1'b0;  // ram(uart側)の書き込み禁止
+                    uart_mode <= 2'd2;
+                end
+                2'd2: begin
+                    uart_start <= 1'b1;  // UART送信用データの準備完了(送信開始)
+                    uart_mode <= (!w_uart_ready) ? 2'd3: 2'd2; // UARTが送信開始したことを確認したらモード3へ
+                end
+                2'd3: begin
+                    if (w_uart_ready) begin
+                        uart_dmem_addr <= UART_STATUS_ADDR;
+                        uart_status <= 1'b1;  // ステータスに送信準備完了を設定
+                        dpram_we2 <= 1'b1;  // ram(uart側)の書き込み許可
+                        uart_mode <= 2'd0;
+                    end
+                end
+                default: uart_mode <= 2'd0;
+            endcase
         end
     end
 
