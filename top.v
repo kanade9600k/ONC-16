@@ -34,7 +34,7 @@ module top (
     reg [1:0] uart_mode;
 
     // FPGA書き込み時コメントアウト解除
-    // // 内部クロック生成(IP: PLL)
+    // 内部クロック生成(IP: PLL)
     // pll pll_inst (
     //     .inclk0(clock),
     //     .c0(clock_100M),
@@ -93,7 +93,7 @@ module top (
             uart_dmem_addr <= UART_STATUS_ADDR;  // デフォルトはステータスアドレスにアクセス
             uart_status <= 1'b1;
             uart_mode <= 2'd0;
-            dpram_we2 <= 1'b0;
+            dpram_we2 <= 1'b1;
         end else begin
             case (uart_mode)
                 2'd0: begin
