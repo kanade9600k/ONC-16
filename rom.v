@@ -13,7 +13,7 @@ module rom (
 
     // 初期値読み込み
     initial begin
-        $readmemh("rom_hello.txt", rom);
+        $readmemh("rom_hello.msn", rom);
     end
 
     always @(posedge clock) begin
