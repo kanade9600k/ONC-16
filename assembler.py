@@ -108,7 +108,7 @@ class Code:
         else:
             raise ValueError(f"Invalid mnemonic: {mnemonic}")
 
-    def mnemonic_code(self, mnemonic: str) -> int:
+    def mnemonic(self, mnemonic: str) -> int:
         """
         ニーモニックを受け取って命令コード（RとB型はfunct）を返す
 
@@ -127,7 +127,7 @@ class Code:
         else:
             return self.op_br[mnemonic.upper()]
 
-    def operand_code(self, operand: str) -> int:
+    def operand(self, operand: str) -> int:
         """
         オペランドを受け取ってオペランドコードを返す
 
@@ -141,7 +141,14 @@ class Code:
             int: オペランドコード
         """
         # 2進数，10進数，16進数の場合，そのまま返す
-        if operand.startswith("0x"):
+        # ""で囲まれたデータの場合
+        if operand.startswith('"') and operand.endswith('"'):
+            # 特殊文字の場合
+            if ("\\" in operand) and (operand != '"\\"'):
+                return ord(operand[1:-1].encode().decode("unicode-escape"))
+            else:
+                return ord(operand[1:-1])
+        elif operand.startswith("0x"):
             return int(operand, 16)
         elif operand.startswith("0b"):
             return int(operand, 2)
@@ -177,11 +184,18 @@ if __name__ == "__main__":
 
     with open(args.input_file, "r", encoding="utf-8") as f:
         for line in f:
-            if line.startswith("#"):
+            # コメント行または空行は無視
+            if line.startswith("#") or line == "\n":
                 continue
             line = line.split("#")[0].strip()  # コメントを削除
             mnemonic, *operands = line.split()
-            operands = [operand.strip(",") for operand in operands]
+            operands = [operand.strip(",") for operand in operands]  # カンマを削除
+            # operandsにおいて"が連続した場合，" "に変換(空白区切りなので" "は['"','"']になる)
+            for i in range(len(operands) - 1):
+                if (operands[i] == '"') and (operands[i + 1] == '"'):
+                    operands[i] = '" "'
+                    operands.pop(i + 1)
+            print(operands)
 
             binary: int = 0b_0000_0000_0000_0000  # 機械語
 
@@ -189,21 +203,21 @@ if __name__ == "__main__":
                 binary = 0b_0000_0001_0000_0000
             elif (op_type := code.op_type(mnemonic)) == "r":
                 binary |= 0b_0000 << 12
-                binary |= code.mnemonic_code(mnemonic) << 8
-                binary |= code.operand_code(operands[1]) << 4
-                binary |= code.operand_code(operands[0])
+                binary |= code.mnemonic(mnemonic) << 8
+                binary |= code.operand(operands[1]) << 4
+                binary |= code.operand(operands[0])
             elif op_type == "i":
-                binary |= code.mnemonic_code(mnemonic) << 12
-                binary |= (code.operand_code(operands[1]) & 0xFF) << 4  # 2の補数
-                binary |= code.operand_code(operands[0])
+                binary |= code.mnemonic(mnemonic) << 12
+                binary |= (code.operand(operands[1]) & 0xFF) << 4  # 2の補数
+                binary |= code.operand(operands[0])
             elif op_type == "bp":
                 binary |= 0b_1111 << 12
-                binary |= code.mnemonic_code(mnemonic) << 8
-                binary |= code.operand_code(operands[0]) & 0xFF  # 2の補数
+                binary |= code.mnemonic(mnemonic) << 8
+                binary |= code.operand(operands[0]) & 0xFF  # 2の補数
             else:
                 binary |= 0b_1111 << 12
-                binary |= code.mnemonic_code(mnemonic) << 8
-                binary |= code.operand_code(operands[0]) << 4
+                binary |= code.mnemonic(mnemonic) << 8
+                binary |= code.operand(operands[0]) << 4
                 binary |= 0b_0000  # 未使用ビット
 
             binaries.append(binary)
