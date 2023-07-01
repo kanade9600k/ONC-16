@@ -14,7 +14,7 @@ module uart_rx (
     parameter UART_CLOCK = 9'd434;  // 50MHz(クロック)/115.2kHz(ポーレート)
     // parameter UART_CLOCK = 9'd217;  // 25MHz(クロック)/115.2kHz(ポーレート)
     // 内部信号定義
-    reg [7:0] data_buf;  // 受信データの一時保存用
+    reg [8:0] data_buf;  // 受信データの一時保存用
     reg [3:0] rx_index;  // どのビットを受信中か
     reg [8:0] clock_count;  // クロック分周用
     reg is_receive;  // 受信中(1: 受信中, 0: 待機中)
@@ -28,19 +28,20 @@ module uart_rx (
         end else if (is_receive) begin  // 受信中
             if (clock_count == UART_CLOCK) begin  // URATのクロックタイミングの場合
                 clock_count <= 9'd0;
-                data_buf[rx_index] <= rx;  // 受信ビットを保存
                 rx_index <= rx_index + 4'd1;
+                data_buf[8:0] <= {data_buf[7:0], rx};  // 受信データを一時保存
 
                 if (rx_index == 4'd9) begin
                     is_receive <= 1'b0;  // 受信終了
-                    rx_data <= data_buf;  // 受信データを出力
+                    rx_index <= 4'd0;
+                    rx_data <= data_buf[8:1];  // 受信データを出力(ストップビットを除く)
                 end
 
             end else begin  // URATのクロックタイミングでないとき
                 clock_count <= clock_count + 9'd1;
             end
 
-        end else if (rx == 1'b0) begin  // 受信開始(受信中は反応しない)
+        end else if (rx == 1'b0) begin  // 受信開始(受信中は反応しない)スタートビットの検出
             clock_count <= 9'd0;
             rx_index <= 4'd0;  // 受信データのインデックスを初期化
             is_receive <= 1'b1;  // 受信中に
