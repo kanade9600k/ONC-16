@@ -17,6 +17,7 @@ module uart_rx (
     reg [8:0] data_buf;  // 受信データの一時保存用
     reg [3:0] rx_index;  // どのビットを受信中か
     reg [8:0] clock_count;  // クロック分周用
+    reg before_rx;  // 前回の受信データ
     reg is_receive;  // 受信中(1: 受信中, 0: 待機中)
 
     always @(posedge clock_50M or negedge n_rst) begin
@@ -24,8 +25,10 @@ module uart_rx (
             rx_index <= 4'b0;
             clock_count <= 5'd0;
             is_receive <= 1'b0;
+            before_rx <= 1'b1;
 
         end else if (is_receive) begin  // 受信中
+            before_rx <= rx;
             if (clock_count == UART_CLOCK) begin  // URATのクロックタイミングの場合
                 clock_count <= 9'd0;
                 rx_index <= rx_index + 4'd1;
@@ -41,11 +44,13 @@ module uart_rx (
                 clock_count <= clock_count + 9'd1;
             end
 
-        end else if (rx == 1'b0) begin  // 受信開始(受信中は反応しない)スタートビットの検出
+        end else if ({before_rx, rx} == 2'b10) begin  // 受信開始(受信中は反応しない)スタートビットの検出
             clock_count <= 9'd0;
             rx_index <= 4'd0;  // 受信データのインデックスを初期化
             is_receive <= 1'b1;  // 受信中に
-
+            before_rx <= rx;  // 前回の受信データを保存
+        end else begin
+            before_rx <= rx;
         end
     end
 
