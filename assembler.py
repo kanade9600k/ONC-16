@@ -195,7 +195,7 @@ if __name__ == "__main__":
                 if (operands[i] == '"') and (operands[i + 1] == '"'):
                     operands[i] = '" "'
                     operands.pop(i + 1)
-            print(operands)
+            # print(operands)
 
             binary: int = 0b_0000_0000_0000_0000  # 機械語
 
