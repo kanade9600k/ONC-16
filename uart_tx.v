@@ -24,6 +24,7 @@ module uart_tx (
             tx_index <= 4'b0;
             clock_count <= 5'd0;
             ready <= 1'b1;
+            tx <= 1'b1;
 
         end else if (!ready) begin  // 送信中
             if (clock_count == UART_CLOCK) begin  // URATのクロックタイミングの場合
