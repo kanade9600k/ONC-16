@@ -8,13 +8,14 @@
 module top_tb;
 
     // 入出力の宣言
-    reg clock_tb, n_rst_tb;
+    reg clock_tb, n_rst_tb, RxD_tb;
     wire TxD_tb, RTS_tb, WAKEUP_tb;
 
     // モジュールの宣言
     top top_inst (
         .clock(clock_tb),
         .n_rst(n_rst_tb),
+        .RxD(RxD_tb),
         .TxD(TxD_tb),
         .RTS(RTS_tb),
         .WAKEUP(WAKEUP_tb)
@@ -27,9 +28,26 @@ module top_tb;
     initial begin
         clock_tb <= 1'b0;
         n_rst_tb <= 1'b0;
+        RxD_tb   <= 1'b1;
         #20;
         n_rst_tb <= 1'b1;
-        #4000000;
+        #40;
+        RxD_tb <= 1'b0;
+        #200000;
+        RxD_tb <= 1'b1;
+        #100000;
+        RxD_tb <= 1'b0;
+        #20000;
+        RxD_tb <= 1'b1;
+        #2000000;
+        RxD_tb <= 1'b0;
+        #40000;
+        RxD_tb <= 1'b1;
+        #20000;
+        RxD_tb <= 1'b0;
+        #20000;
+        RxD_tb <= 1'b1;
+        #2000000;
         $finish;
     end
 
