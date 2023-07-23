@@ -31,12 +31,12 @@ module uart_rx (
             if (clock_count == UART_CLOCK) begin  // URATのクロックタイミングの場合
                 clock_count <= 9'd0;
                 rx_index <= rx_index + 4'd1;
-                data_buf[8:0] <= {data_buf[7:0], rx};  // 受信データを一時保存
+                data_buf[8:0] <= {rx, data_buf[8:1]};  // 受信データを一時保存
 
                 if (rx_index == 4'd9) begin
                     ready <= 1'b1;  // 受信終了
                     rx_index <= 4'd0;
-                    rx_data <= data_buf[8:1];  // 受信データを出力(ストップビットを除く)
+                    rx_data <= data_buf[7:0];  // 受信データを出力(ストップビットを除く)
                 end
 
             end else begin  // URATのクロックタイミングでないとき
