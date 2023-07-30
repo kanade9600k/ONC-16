@@ -13,7 +13,7 @@ module rom (
 
     // 初期値読み込み
     initial begin
-        $readmemh("echo.msn", rom);
+        $readmemh("asm/digit_separator.msn", rom);
     end
 
     always @(posedge clock) begin
