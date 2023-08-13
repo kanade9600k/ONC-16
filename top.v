@@ -13,9 +13,9 @@ module top (
     input  wire clock,
     input  wire n_rst,
     input  wire RxD,
-    output wire RxD_test,
+    output wire RxD_ex,
     output wire TxD,
-    output wire TxD_test,
+    output wire TxD_ex,
     output wire RTS,
     output wire WAKEUP
 );
@@ -43,25 +43,25 @@ module top (
 
     // FPGA書き込み時コメントアウト解除
     // 内部クロック生成(IP: PLL)
-    // pll pll_inst (
-    //     .inclk0(clock),
-    //     .c0(clock_100M),
-    //     .c1(clock_50M),
-    //     .c2(clock_25M)
-    // );
+    pll pll_inst (
+        .inclk0(clock),
+        .c0(clock_100M),
+        .c1(clock_50M),
+        .c2(clock_25M)
+    );
 
     // FPGA書き込み時コメントアウト
-    assign clock_100M = clock;
-    divider divider_100_to_50 (
-        .clock_in(clock),
-        .n_rst(n_rst),
-        .clock_out(clock_50M)
-    );
-    divider divider_50_to_25 (
-        .clock_in(clock_50M),
-        .n_rst(n_rst),
-        .clock_out(clock_25M)
-    );
+    // assign clock_100M = clock;
+    // divider divider_100_to_50 (
+    //     .clock_in(clock),
+    //     .n_rst(n_rst),
+    //     .clock_out(clock_50M)
+    // );
+    // divider divider_50_to_25 (
+    //     .clock_in(clock_50M),
+    //     .n_rst(n_rst),
+    //     .clock_out(clock_25M)
+    // );
 
     // CPU
     onc_16 onc_16_inst (
@@ -175,8 +175,8 @@ module top (
     );
 
     // UART IC 定数割当て
-    assign RxD_test = RxD;
-    assign TxD_test = TxD;
+    assign RxD_ex = RxD;
+    assign TxD_ex = TxD;
     assign RTS = 1'b0;
     assign WAKEUP = 1'b1;
 
