@@ -11,6 +11,7 @@ module onc_16_tb;
     reg [`DATA_W-1:0] dmem_din_tb;
     reg clock_tb;
     reg n_rst_tb;
+    reg en_tb;
     wire [`DATA_W-1:0] imem_addr_tb;
     wire [`DATA_W-1:0] dmem_addr_tb;
     wire [`DATA_W-1:0] dmem_dout_tb;
@@ -22,6 +23,7 @@ module onc_16_tb;
         .dmem_din(dmem_din_tb),
         .clock(clock_tb),
         .n_rst(n_rst_tb),
+        .en(en_tb),
         .imem_addr(imem_addr_tb),
         .dmem_addr(dmem_addr_tb),
         .dmem_dout(dmem_dout_tb),
@@ -45,6 +47,7 @@ module onc_16_tb;
     initial begin
         clock_tb <= 1'b0;
         n_rst_tb <= 1'b0;
+        en_tb <= 1'b1;
         #10;
         n_rst_tb <= 1'b1;
         dmem_din_tb <= `DATA_UD;

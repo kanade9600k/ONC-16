@@ -69,6 +69,7 @@ module top (
         .dmem_din(w_cpu_dmem_din),
         .clock(clock_50M),
         .n_rst(n_rst),
+        .en(1'b1),
         .imem_addr(w_cpu_imem_addr),
         .dmem_addr(w_cpu_dmem_addr),
         .dmem_dout(w_cpu_dmem_dout),
