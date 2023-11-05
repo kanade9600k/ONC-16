@@ -15,6 +15,7 @@ module onc_16 (
     input wire [`DATA_W-1:0] dmem_din,
     input wire clock,
     input wire n_rst,
+    input wire en,
     output wire [`DATA_W-1:0] imem_addr,
     output wire [`DATA_W-1:0] dmem_addr,
     output wire [`DATA_W-1:0] dmem_dout,
@@ -35,11 +36,12 @@ module onc_16 (
     wire [`FR_FUNC_W-1:0] w_fr_func;  // フラグレジスタ分岐条件選択
     wire [`FR_FLAG_W-1:0] w_fr_flags;  // フラグレジスタフラグ
     wire [`PC_IMR_SEL_W-1:0] w_pc_imr_sel;  // プログラムカウンタイミディエイト・レジスタ選択
+    wire [`DATA_W-1:0] w_imem_addr;  // プログラムカウンタのアドレス
 
     // 機能記述（接続）
     // CPUデータメモリ接続
-    assign dmem_dout = w_r1_data;
-    assign dmem_addr = w_r2_data;
+    assign dmem_dout = (en) ? w_r1_data : `DATA_UD;
+    assign dmem_addr = (en) ? w_r2_data : `DATA_UD;
     // 命令デコーダ
     decoder decoder_inst (
         .in(imem_din),
@@ -90,7 +92,10 @@ module onc_16 (
     flag_reg_dec flag_reg_dec_inst(.flags(w_fr_flags), .func(w_fr_func), .de(w_fr_de), .clock(clock), .n_rst(n_rst), .bre(w_pc_bre));
     
     // プログラムカウンタモジュール
-    pc pc_inst(.imm(w_imm_s), .rs(w_r2_data), .imr_sel(w_pc_imr_sel), .bre(w_pc_bre), .clock(clock), .n_rst(n_rst), .out(imem_addr));
+    pc pc_inst(.imm(w_imm_s), .rs(w_r2_data), .imr_sel(w_pc_imr_sel), .bre(w_pc_bre), .clock(clock), .n_rst(n_rst), .out(w_imem_addr));
+    
+    // CPU命令メモリ接続
+    assign imem_addr = (en) ? w_imem_addr : `DATA_UD;
     // verilog_format: on
 
 endmodule
