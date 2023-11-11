@@ -2,7 +2,8 @@
 `ifndef ONC_16_TB_V
 `define ONC_16_TB_V
 `include "def.v"
-`include "onc_16.v"
+// `include "onc_16.v"
+`include "onc_16_pl.v"
 `default_nettype none
 
 module onc_16_tb;
@@ -18,7 +19,21 @@ module onc_16_tb;
     wire dmem_we_tb;
 
     // モジュールの宣言
-    onc_16 onc_16_inst (
+    // シングルサイクル
+    // onc_16 onc_16_inst (
+    //     .imem_din(imem_din_tb),
+    //     .dmem_din(dmem_din_tb),
+    //     .clock(clock_tb),
+    //     .n_rst(n_rst_tb),
+    //     .en(en_tb),
+    //     .imem_addr(imem_addr_tb),
+    //     .dmem_addr(dmem_addr_tb),
+    //     .dmem_dout(dmem_dout_tb),
+    //     .dmem_we(dmem_we_tb)
+    // );
+
+    // パイプライン
+    onc_16_pl onc_16_pl_inst (
         .imem_din(imem_din_tb),
         .dmem_din(dmem_din_tb),
         .clock(clock_tb),
@@ -33,7 +48,7 @@ module onc_16_tb;
     // 実行する命令メモリの内容をファイルから読み込み
     reg [`INST_W-1:0] imem[0:2**`DATA_W-1];
     initial begin
-        $readmemh("../rom_hello.txt", imem);
+        $readmemh("rom_fibonacci.txt", imem);
     end
     // 命令メモリにCPUの命令メモリ入力と命令メモリアドレスを接続
     always @(negedge clock_tb) begin    // アドレスとデータが1クロックずれる問題に対処するために，データは立ち下がりエッジで読み込む

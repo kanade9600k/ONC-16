@@ -15,6 +15,7 @@ module onc_16_pl (
     input wire [`DATA_W-1:0] dmem_din,
     input wire clock,
     input wire n_rst,
+    input wire en,
     output wire [`DATA_W-1:0] imem_addr,
     output wire [`DATA_W-1:0] dmem_addr,
     output wire [`DATA_W-1:0] dmem_dout,
@@ -37,27 +38,27 @@ module onc_16_pl (
     wire [`PC_IMR_SEL_W-1:0] w_pc_imr_sel;  // プログラムカウンタイミディエイト・レジスタ選択
     
     // パイプライン用レジスタ
-    reg [`DATA_W-1:0] if_imem;
-
-
+    reg [`DATA_W-1:0] r_fd_imem;
+    reg r_fd_en;
 
     // 機能記述（接続）
-    // CPUデータメモリ接続
+    // 命令フェッチ(F)
     assign dmem_dout = w_r1_data;
     assign dmem_addr = w_r2_data;
 
-    // パイプライン: ID
+    // パイプライン: 命令フェッチ(F)->命令デコード(D)
     always @(posedge clock or negedge n_rst) begin
         if (!n_rst) begin
-            if_imem <= `DATA_UD;
-        end else begin
-            if_imem <= imem_din;
+            r_fd_imem <= `DATA_UD;
+        end else if (en) begin
+            r_fd_imem <= imem_din;
         end
+        r_fd_en <= en;
     end
 
-    // 命令デコーダ
+    // 命令デコード(D)
     decoder decoder_inst (
-        .in(if_imem),
+        .in(r_fd_imem),
         .alu_func(w_alu_func),
         .alu_a_sel(w_alu_a_sel),
         .alu_b_sel(w_alu_b_sel),
@@ -73,7 +74,6 @@ module onc_16_pl (
         .dmem_we(dmem_we)
     );
 
-    // レジスタファイル
     // verilog_format: off
     assign w_w_data = (w_rf_w_sel == `RF_W_ALU) ? w_alu_y :  // 書き込み元選択
                       (w_rf_w_sel == `RF_W_DM) ? dmem_din : `DATA_UD;
@@ -89,10 +89,9 @@ module onc_16_pl (
         .r2_data(w_r2_data)
     );
 
-    // ビット拡張器
     extender extender_inst (.in(w_imm), .out_z(w_imm_z), .out_s(w_imm_s));
 
-    // ALU
+    // 演算(E)
     assign w_alu_a = (w_alu_a_sel == `ALU_A_RD) ? w_r1_data :  // aポート入力選択
                      (w_alu_a_sel == `ALU_A_ZE) ? w_imm_z   : `DATA_UD;
     assign w_alu_b = (w_alu_b_sel == `ALU_B_RS) ? w_r2_data :  // bポート入力選択
@@ -101,14 +100,13 @@ module onc_16_pl (
                      (w_alu_b_sel == `ALU_B_SV) ? `LDHI_SA  : `DATA_UD;
     alu alu_inst(.a(w_alu_a), .b(w_alu_b), .func(w_alu_func), .y(w_alu_y), .flags(w_fr_flags));
 
-    // フラグレジスタ・デコーダ
+    // ライトバック(W)
     flag_reg_dec flag_reg_dec_inst(.flags(w_fr_flags), .func(w_fr_func), .de(w_fr_de), .clock(clock), .n_rst(n_rst), .bre(w_pc_bre));
     
     // プログラムカウンタモジュール
     pc pc_inst(.imm(w_imm_s), .rs(w_r2_data), .imr_sel(w_pc_imr_sel), .bre(w_pc_bre), .clock(clock), .n_rst(n_rst), .out(imem_addr));
     // verilog_format: on
-
-
+    // 命令フェッチへ
 
 endmodule
 
