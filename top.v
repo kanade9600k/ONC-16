@@ -1,7 +1,8 @@
 // 周辺回路を含めたトップモジュール
 `ifndef TOP_V
 `define TOP_V
-`include "cpu/onc_16.v"
+// `include "cpu/onc_16.v"
+`include "cpu/onc_16_pl.v"
 `include "uart_tx.v"
 `include "uart_rx.v"
 `include "rom.v"
@@ -64,7 +65,20 @@ module top (
     // );
 
     // CPU
-    onc_16 onc_16_inst (
+    // onc_16 onc_16_inst (
+    //     .imem_din(w_cpu_imem_d),
+    //     .dmem_din(w_cpu_dmem_din),
+    //     .clock(clock_50M),
+    //     .n_rst(n_rst),
+    //     .en(1'b1),
+    //     .imem_addr(w_cpu_imem_addr),
+    //     .dmem_addr(w_cpu_dmem_addr),
+    //     .dmem_dout(w_cpu_dmem_dout),
+    //     .dmem_we(w_cpu_dmem_we)
+    // );
+
+    // パイプラインを実装したCPU
+    onc_16_pl onc_16_pl_inst (
         .imem_din(w_cpu_imem_d),
         .dmem_din(w_cpu_dmem_din),
         .clock(clock_50M),

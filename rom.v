@@ -13,7 +13,7 @@ module rom (
 
     // 初期値読み込み
     initial begin
-        $readmemh("asm/print_int.msn", rom);
+        $readmemh("asm/hello_pl.msn", rom);
     end
 
     always @(posedge clock) begin

@@ -41,7 +41,7 @@
     ```verilog
     initial begin
         // デフォルトは123*456を計算するプログラム
-        $readmemh("rom_multiplication.txt", imem);
+        $readmemh("../asm/multiplication_pl.msn", imem);
     end
     ```
 
@@ -71,8 +71,8 @@
 
 * 割り込み処理の実装
 
-* パイプラインの実装
-  * 現状シングルサイクルで行っている
+* 4段パイプラインの実装
+  * 現状2段パイプライン（IFとIDの間）
   * シングルサイクルとパイプラインでの性能・リソース比較をしたい
     * (2023/5/27) FPGA：10M08SCU169C8G，最大動作周波数：69.4 MHz, LEs：933 / 8,064 ( 12 % )，REGs：315
   * パイプラインハザード
