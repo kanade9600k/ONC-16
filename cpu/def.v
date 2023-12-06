@@ -88,6 +88,7 @@
 `define FR_BLTU_BC `FR_FUNC_W'b101
 `define FR_BGEU_BNC `FR_FUNC_W'b110
 `define FR_BVF `FR_FUNC_W'b111
+`define FR_UD `FR_FUNC_W'bx
 // プログラムカウンタの分岐時利用値選択コード
 `define PC_IMM `PC_IMR_SEL_W'b0     // イミディエイトデータを利用
 `define PC_REG `PC_IMR_SEL_W'b1     // レジスタの値を利用
