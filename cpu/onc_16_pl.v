@@ -147,7 +147,7 @@ module onc_16_pl (
     flag_reg_dec flag_reg_dec_inst(.flags(w_fr_flags), .func(r_de_fr_func), .de(r_de_fr_de), .clock(clock), .n_rst(n_rst), .bre(w_pc_bre));
     
     // プログラムカウンタモジュール
-    pc pc_inst(.imm(w_imm_s), .rs(w_r2_data), .imr_sel(r_de_pc_imr_sel), .bre(w_pc_bre), .clock(clock), .n_rst(n_rst), .out(imem_addr));
+    pc pc_inst(.imm(r_de_imm_s), .rs(r_de_r2_data), .imr_sel(r_de_pc_imr_sel), .bre(w_pc_bre), .clock(clock), .n_rst(n_rst), .out(imem_addr));
     // verilog_format: on
     // 命令フェッチへ
 
