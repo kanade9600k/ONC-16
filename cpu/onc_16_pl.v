@@ -150,7 +150,7 @@ module onc_16_pl (
                      (r_de_alu_b_sel == `ALU_B_ZE) ? r_de_imm_z   :
                      (r_de_alu_b_sel == `ALU_B_SE) ? r_de_imm_s   : 
                      (r_de_alu_b_sel == `ALU_B_SV) ? `LDHI_SA  : `DATA_UD;
-    alu alu_inst(.a(w_alu_a), .b(w_alu_b), .func(w_alu_func), .y(w_alu_y), .flags(w_fr_flags));
+    alu alu_inst(.a(w_alu_a), .b(w_alu_b), .func(r_de_alu_func), .y(w_alu_y), .flags(w_fr_flags));
 
     // メモリアクセス(演算と同じタイミング)
     assign dmem_dout = r_de_r1_data;
