@@ -48,7 +48,7 @@ module onc_16_tb;
     // 実行する命令メモリの内容をファイルから読み込み
     reg [`INST_W-1:0] imem[0:2**`DATA_W-1];
     initial begin
-        $readmemh("../asm/multiplication_pl.msn", imem);
+        $readmemh("../asm/multiplication_pl3.msn", imem);
     end
     // 命令メモリにCPUの命令メモリ入力と命令メモリアドレスを接続
     always @(negedge clock_tb) begin    // アドレスとデータが1クロックずれる問題に対処するために，データは立ち下がりエッジで読み込む
