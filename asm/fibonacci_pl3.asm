@@ -19,7 +19,7 @@ LDI r2, 0    #  1  pre = 0
 LDI r3, 24   #  2  n = 24
 LDI r4, 1    #  3  i = 1
 CMP r4, r3   #  4  i - n
-BGEI 9      #  5  if (i - n >= 0) goto 5 + 3 + 9
+BGEI 9       #  5  if (i - n >= 0) goto 5 + 3 + 9
 NOP          #  6  制御ハザード対策
 NOP          #  7  制御ハザード対策
 MOV r5, r1   #  8  tmp = fib
